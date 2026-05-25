@@ -22,6 +22,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.47.0/tabler-icons.min.css"
         />
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-WDMMYPCJLW"></script>
+        <script dangerouslySetInnerHTML={{ __html: `
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-WDMMYPCJLW');
+        `}} />
       </head>
       <body>
         <Navbar />
