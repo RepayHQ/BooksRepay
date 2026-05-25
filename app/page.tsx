@@ -2,237 +2,191 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import BookCard from '@/components/BookCard';
-import { Book, CATEGORY_CONFIG, CATEGORIES, formatViews } from '@/lib/books';
-import { Search, Play, TrendingUp, BookOpen, Zap } from 'lucide-react';
+import { Book, CATEGORY_CONFIG, CATEGORIES } from '@/lib/books';
 
 const MOODS = [
-  { label: 'Motivated', icon: 'ti-flame', color: '#FFB800', cat: 'Self Development' },
-  { label: 'Calm', icon: 'ti-moon', color: '#7F77DD', cat: 'Sleep' },
-  { label: 'Inspired', icon: 'ti-bulb', color: '#00FF9D', cat: 'Philosophy' },
-  { label: 'Build', icon: 'ti-rocket', color: '#00C9FF', cat: 'Business' },
-  { label: 'Escape', icon: 'ti-wand', color: '#FF6B00', cat: 'Fiction' },
-  { label: 'Grow', icon: 'ti-heart', color: '#FF4E6A', cat: 'Psychology' },
+  { label: 'Motivated', icon: 'ti-flame', color: '#FFB800', cat: 'self-development' },
+  { label: 'Calm', icon: 'ti-moon', color: '#7F77DD', cat: 'sleep' },
+  { label: 'Inspired', icon: 'ti-bulb', color: '#00FF9D', cat: 'philosophy' },
+  { label: 'Build', icon: 'ti-rocket', color: '#00C9FF', cat: 'business' },
+  { label: 'Escape', icon: 'ti-wand', color: '#FF6B00', cat: 'fiction' },
+  { label: 'Grow', icon: 'ti-heart', color: '#FF4E6A', cat: 'psychology' },
 ];
+
+const CAT_ROW_ORDER = ['Self Development','Philosophy','Spirituality','Fiction','Classics','History','Science','Biography','Psychology','Health','Sleep'];
 
 export default function HomePage() {
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState('All');
-  const [query, setQuery] = useState('');
 
   useEffect(() => {
-    fetch('/books_final.json')
-      .then(r => r.json())
-      .then((data: Book[]) => {
-        setBooks(data);
-        setLoading(false);
-      });
+    fetch('/books_final.json').then(r => r.json()).then((data: Book[]) => {
+      setBooks(data);
+      setLoading(false);
+    });
   }, []);
 
-  const featured = books.slice(0, 1)[0];
   const trending = books.slice(0, 10);
-  const filtered = activeCategory === 'All'
-    ? books.slice(0, 20)
-    : books.filter(b => b.category === activeCategory).slice(0, 20);
+  const filtered = activeCategory === 'All' ? books.slice(0, 10) : books.filter(b => b.category === activeCategory).slice(0, 10);
 
   if (loading) return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="text-center">
-        <div className="w-12 h-12 rounded-full border-2 border-purple-500 border-t-transparent animate-spin mx-auto mb-4" />
-        <p className="text-white/40 text-sm">Loading your library...</p>
-      </div>
+    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: '16px' }}>
+      <div style={{ width: '40px', height: '40px', borderRadius: '50%', border: '2px solid #BF5FFF', borderTopColor: 'transparent', animation: 'spin 1s linear infinite' }} />
+      <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '13px' }}>Loading your library...</p>
     </div>
   );
 
   return (
-    <div className="min-h-screen">
+    <div style={{ minHeight: '100vh' }}>
 
-      {/* ── HERO ─────────────────────────────────────────── */}
-      <section className="relative overflow-hidden dot-grid py-20 px-4">
-        {/* Background orbs */}
-        <div className="absolute top-0 right-0 w-96 h-96 rounded-full opacity-10"
-          style={{ background: '#BF5FFF', filter: 'blur(80px)' }} />
-        <div className="absolute bottom-0 left-0 w-64 h-64 rounded-full opacity-10"
-          style={{ background: '#7F35CC', filter: 'blur(60px)' }} />
-
-        <div className="max-w-7xl mx-auto relative z-10">
-          <div className="max-w-3xl">
-            <div className="flex items-center gap-2 mb-6 animate-in delay-1">
-              <div className="h-px w-8" style={{ background: '#BF5FFF' }} />
-              <span className="text-xs tracking-widest uppercase text-white/40">43,000+ Free Audiobooks</span>
-            </div>
-
-            <h1 className="text-5xl md:text-7xl font-bold leading-[1.05] tracking-tight mb-6 animate-in delay-2"
-              style={{ fontFamily: "'Playfair Display', serif" }}>
-              Books always<br />
-              <span style={{ color: '#BF5FFF' }}>repay you.</span>
-            </h1>
-
-            <p className="text-lg text-white/50 mb-8 max-w-lg animate-in delay-3">
-              Stream the world's greatest audiobooks, completely free. Every genre, every era, every mood.
-            </p>
-
-            {/* Search */}
-            <div className="relative max-w-lg animate-in delay-4">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30" size={18} />
+      {/* HERO */}
+      <section style={{ padding: '48px 24px 32px', position: 'relative', overflow: 'hidden', backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.03) 1px, transparent 1px)', backgroundSize: '28px 28px' }}>
+        <div style={{ position: 'absolute', width: '300px', height: '300px', borderRadius: '50%', background: '#BF5FFF', top: '-100px', right: '-60px', opacity: 0.07, filter: 'blur(80px)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', width: '200px', height: '200px', borderRadius: '50%', background: '#7F35CC', bottom: '-50px', left: '0', opacity: 0.09, filter: 'blur(60px)', pointerEvents: 'none' }} />
+        <div style={{ maxWidth: '900px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
+            <div style={{ height: '1px', width: '20px', background: '#BF5FFF' }} />
+            <span style={{ fontSize: '10px', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)' }}>43,000+ Free Audiobooks</span>
+          </div>
+          <h1 style={{ fontSize: 'clamp(36px, 6vw, 64px)', fontWeight: 700, lineHeight: 1.05, letterSpacing: '-2px', marginBottom: '16px', fontFamily: "'Playfair Display', serif", color: '#fff' }}>
+            One book can<br />change <span style={{ color: '#BF5FFF' }}>everything.</span>
+          </h1>
+          <p style={{ fontSize: '14px', color: 'rgba(255,255,255,0.45)', marginBottom: '24px', maxWidth: '460px', lineHeight: 1.7 }}>
+            Stream from <strong style={{ color: 'rgba(255,255,255,0.7)', fontWeight: 500 }}>YouTube</strong> — completely free. Every genre, every era, every idea that ever mattered.
+          </p>
+          <div style={{ maxWidth: '480px', marginBottom: '24px' }}>
+            <div style={{ position: 'relative' }}>
+              <i className="ti ti-search" style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', fontSize: '15px', color: 'rgba(255,255,255,0.3)' }} />
               <input
                 type="text"
                 placeholder="Search by title, author, or category..."
-                className="w-full bg-white/5 border border-white/10 rounded-full py-4 pl-12 pr-6 text-sm text-white placeholder-white/30 focus:outline-none focus:border-purple-500/50 transition-colors"
-                value={query}
-                onChange={e => setQuery(e.target.value)}
-                onKeyDown={e => e.key === 'Enter' && query && (window.location.href = `/search?q=${encodeURIComponent(query)}`)}
+                style={{ width: '100%', background: 'rgba(255,255,255,0.05)', border: '0.5px solid rgba(255,255,255,0.12)', borderRadius: '28px', padding: '14px 20px 14px 44px', fontSize: '13px', color: '#fff', outline: 'none', fontFamily: 'inherit' }}
+                onKeyDown={e => { if (e.key === 'Enter') { const v = (e.target as HTMLInputElement).value; if (v) window.location.href = `/search?q=${encodeURIComponent(v)}`; }}}
               />
-              {query && (
-                <button
-                  onClick={() => window.location.href = `/search?q=${encodeURIComponent(query)}`}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 px-4 py-2 rounded-full text-xs font-semibold text-black"
-                  style={{ background: '#BF5FFF' }}>
-                  Search
-                </button>
-              )}
-            </div>
-
-            {/* Stats */}
-            <div className="flex items-center gap-6 mt-8 animate-in delay-4">
-              {[
-                { label: 'Audiobooks', value: '43K+' },
-                { label: 'Categories', value: '13' },
-                { label: 'Always Free', value: '100%' },
-              ].map(stat => (
-                <div key={stat.label}>
-                  <div className="text-xl font-bold" style={{ color: '#BF5FFF' }}>{stat.value}</div>
-                  <div className="text-xs text-white/30">{stat.label}</div>
-                </div>
-              ))}
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* ── MOOD BROWSING ─────────────────────────────────── */}
-      <section className="px-4 py-10">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-sm font-semibold tracking-widest uppercase text-white/40 mb-6">Browse by mood</h2>
-          <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
-            {MOODS.map(mood => (
-              <Link key={mood.label} href={`/category/${mood.cat.toLowerCase().replace(' ', '-')}`}>
-                <div className="rounded-xl p-4 text-center cursor-pointer hover:-translate-y-1 transition-transform"
-                  style={{ background: `${mood.color}0d`, border: `0.5px solid ${mood.color}22` }}>
-                  <i className={`ti ${mood.icon} text-xl mb-2 block`} style={{ color: mood.color }} aria-hidden="true" />
-                  <div className="text-xs font-medium text-white/70">{mood.label}</div>
-                </div>
-              </Link>
+          <div style={{ display: 'flex', gap: '28px' }}>
+            {[{ n: '43K+', l: 'Audiobooks' }, { n: '13', l: 'Categories' }, { n: 'Free', l: 'Always & forever' }].map(s => (
+              <div key={s.l}>
+                <div style={{ fontSize: '22px', fontWeight: 700, color: '#BF5FFF' }}>{s.n}</div>
+                <div style={{ fontSize: '10px', color: 'rgba(255,255,255,0.3)', marginTop: '2px' }}>{s.l}</div>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── CATEGORY CHIPS ────────────────────────────────── */}
-      <section className="px-4 pb-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex flex-wrap gap-2">
-            <button
-              onClick={() => setActiveCategory('All')}
-              className={`px-4 py-1.5 rounded-full text-xs font-semibold transition-all ${activeCategory === 'All' ? 'text-black' : 'text-white/50 hover:text-white border border-white/10'}`}
-              style={activeCategory === 'All' ? { background: '#BF5FFF' } : {}}>
-              All
-            </button>
-            {CATEGORIES.map(cat => {
-              const config = CATEGORY_CONFIG[cat];
-              const active = activeCategory === cat;
-              return (
-                <button key={cat}
-                  onClick={() => setActiveCategory(cat)}
-                  className={`px-4 py-1.5 rounded-full text-xs font-semibold transition-all ${active ? '' : 'border hover:text-white'}`}
-                  style={active
-                    ? { background: config.color, color: '#000' }
-                    : { borderColor: `${config.color}33`, color: config.color }}>
-                  {cat}
-                </button>
-              );
-            })}
-          </div>
+      {/* 1. CATEGORIES */}
+      <section style={{ padding: '0 24px 16px', maxWidth: '1200px', margin: '0 auto' }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+          {['All', ...CATEGORIES].map(cat => {
+            const cfg = CATEGORY_CONFIG[cat];
+            const active = activeCategory === cat;
+            return (
+              <button key={cat} onClick={() => setActiveCategory(cat)} style={{
+                padding: '5px 14px', borderRadius: '20px', fontSize: '11px', fontWeight: 600,
+                cursor: 'pointer', border: active ? 'none' : `0.5px solid ${cfg ? cfg.color + '44' : 'rgba(255,255,255,0.2)'}`,
+                background: active ? (cfg ? cfg.color : '#BF5FFF') : 'transparent',
+                color: active ? '#000' : (cfg ? cfg.color : 'rgba(255,255,255,0.6)'),
+                fontFamily: 'inherit', transition: 'all 0.15s'
+              }}>
+                {cat}
+              </button>
+            );
+          })}
         </div>
       </section>
 
-      {/* ── BOOK GRID ─────────────────────────────────────── */}
-      <section className="px-4 py-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-sm font-semibold tracking-widest uppercase text-white/40">
-              {activeCategory === 'All' ? 'Trending this week' : activeCategory}
-            </h2>
-            <Link href="/library" className="text-xs text-white/30 hover:text-white transition-colors">
-              View all →
+      {/* 2. MOOD */}
+      <section style={{ padding: '8px 24px 20px', maxWidth: '1200px', margin: '0 auto' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
+          <div style={{ flex: 1, height: '0.5px', background: 'rgba(255,255,255,0.07)' }} />
+          <span style={{ fontSize: '9px', fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.25)', whiteSpace: 'nowrap' }}>— or browse by mood</span>
+          <div style={{ flex: 1, height: '0.5px', background: 'rgba(255,255,255,0.07)' }} />
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: '8px' }}>
+          {MOODS.map(m => (
+            <Link key={m.label} href={`/category/${m.cat}`} style={{ textDecoration: 'none' }}>
+              <div style={{ borderRadius: '10px', padding: '12px 8px', textAlign: 'center', background: `${m.color}0d`, border: `0.5px solid ${m.color}22`, cursor: 'pointer' }}>
+                <i className={`ti ${m.icon}`} style={{ fontSize: '18px', color: m.color, display: 'block', marginBottom: '6px' }} />
+                <div style={{ fontSize: '10px', color: 'rgba(255,255,255,0.6)', fontWeight: 500 }}>{m.label}</div>
+              </div>
             </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* 3. TRENDING */}
+      <section style={{ padding: '0 24px 24px', maxWidth: '1200px', margin: '0 auto' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+          <span style={{ fontSize: '10px', fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)' }}>
+            {activeCategory === 'All' ? 'Trending this week' : activeCategory}
+          </span>
+          <Link href="/library" style={{ fontSize: '11px', color: '#BF5FFF', textDecoration: 'none' }}>View all →</Link>
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '8px' }}>
+            {filtered.slice(0, 5).map((b, i) => <BookCard key={b.videoId} book={b} index={i} />)}
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
-            {filtered.map((book, i) => (
-              <BookCard key={book.videoId} book={book} index={i} />
-            ))}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '8px' }}>
+            {filtered.slice(5, 10).map((b, i) => <BookCard key={b.videoId} book={b} index={i + 5} />)}
           </div>
         </div>
       </section>
 
-      {/* ── EMPIRE SECTION ────────────────────────────────── */}
-      <section className="px-4 py-16 mt-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-10">
-            <div className="text-xs tracking-widest uppercase text-white/30 mb-3">Repay Media Universe</div>
-            <h2 className="text-2xl font-bold" style={{ fontFamily: "'Playfair Display', serif" }}>
-              Explore the Empire
-            </h2>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div style={{ height: '0.5px', background: 'rgba(255,255,255,0.05)', margin: '8px 24px 24px' }} />
 
-            <div className="rounded-2xl p-6 border" style={{ background: '#0d0d1a', borderColor: '#BF5FFF33' }}>
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: '#BF5FFF22' }}>
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#BF5FFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
-                  </svg>
-                </div>
-                <div>
-                  <div className="font-bold text-sm">BooksRepay</div>
-                  <div className="text-xs text-white/30">You are here</div>
-                </div>
+      {/* 4. EMPIRE */}
+      <section style={{ padding: '0 24px 32px', maxWidth: '1200px', margin: '0 auto' }}>
+        <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+          <div style={{ fontSize: '9px', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.25)', marginBottom: '8px' }}>Repay Media Universe</div>
+          <div style={{ fontSize: '22px', fontWeight: 700, fontFamily: "'Playfair Display', serif" }}>Explore the Empire</div>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px' }}>
+          {[
+            { name: 'BooksRepay', url: '#', color: '#BF5FFF', icon: 'ti-book', desc: '43,000+ free audiobooks from YouTube. Stream anything, anytime.', sub: 'You are here' },
+            { name: 'IdeasRepay', url: 'https://ideasrepay.com', color: '#FFB800', icon: 'ti-bolt', desc: 'Blueprints to build online income. Turn what you learn into what you earn.', sub: 'ideasrepay.com ↗' },
+            { name: 'AdsRepay', url: 'https://adsrepay.com', color: '#00FF9D', icon: 'ti-trending-up', desc: 'Earn while you learn. Make money online through surveys and tasks.', sub: 'adsrepay.com ↗' },
+          ].map(e => (
+            <a key={e.name} href={e.url} target={e.url === '#' ? undefined : '_blank'} rel="noopener noreferrer"
+              style={{ borderRadius: '14px', padding: '18px', border: `0.5px solid ${e.url === '#' ? e.color + '33' : 'rgba(255,255,255,0.07)'}`, background: '#0d0d1a', textDecoration: 'none', display: 'block' }}>
+              <div style={{ width: '32px', height: '32px', borderRadius: '10px', background: `${e.color}18`, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '10px' }}>
+                <i className={`ti ${e.icon}`} style={{ fontSize: '16px', color: e.color }} />
               </div>
-              <p className="text-sm text-white/50">43,000+ free audiobooks. Stream anything, anytime, for free.</p>
-            </div>
-
-            <a href="https://ideasrepay.com" target="_blank" rel="noopener noreferrer"
-              className="rounded-2xl p-6 border hover:border-yellow-500/30 transition-colors group" style={{ background: '#0d0d1a', borderColor: '#ffffff11' }}>
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: '#FFB80022' }}>
-                  <Zap size={18} color="#FFB800" />
-                </div>
-                <div>
-                  <div className="font-bold text-sm group-hover:text-yellow-400 transition-colors">IdeasRepay</div>
-                  <div className="text-xs text-white/30">ideasrepay.com ↗</div>
-                </div>
-              </div>
-              <p className="text-sm text-white/50">Turn knowledge into income. Blueprints for building online businesses.</p>
+              <div style={{ fontSize: '13px', fontWeight: 700, color: e.url === '#' ? '#fff' : 'rgba(255,255,255,0.85)', marginBottom: '3px' }}>{e.name}</div>
+              <div style={{ fontSize: '9px', color: 'rgba(255,255,255,0.25)', marginBottom: '8px' }}>{e.sub}</div>
+              <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.45)', lineHeight: 1.5 }}>{e.desc}</div>
             </a>
-
-            <a href="https://adsrepay.com" target="_blank" rel="noopener noreferrer"
-              className="rounded-2xl p-6 border hover:border-green-500/30 transition-colors group" style={{ background: '#0d0d1a', borderColor: '#ffffff11' }}>
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: '#00FF9D22' }}>
-                  <TrendingUp size={18} color="#00FF9D" />
-                </div>
-                <div>
-                  <div className="font-bold text-sm group-hover:text-green-400 transition-colors">AdsRepay</div>
-                  <div className="text-xs text-white/30">adsrepay.com ↗</div>
-                </div>
-              </div>
-              <p className="text-sm text-white/50">Earn while you learn. Make money online through surveys, tasks and more.</p>
-            </a>
-
-          </div>
+          ))}
         </div>
       </section>
 
+      <div style={{ height: '0.5px', background: 'rgba(255,255,255,0.05)', margin: '0 24px 24px' }} />
+
+      {/* 5. CATEGORY ROWS */}
+      <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+        {CAT_ROW_ORDER.map(cat => {
+          const catBooks = books.filter(b => b.category === cat).slice(0, 5);
+          if (catBooks.length < 3) return null;
+          const cfg = CATEGORY_CONFIG[cat];
+          const slug = cat.toLowerCase().replace(/\s+/g, '-');
+          return (
+            <section key={cat} style={{ padding: '0 24px 28px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
+                <i className={`ti ${cfg?.icon}`} style={{ fontSize: '16px', color: cfg?.color }} />
+                <span style={{ fontSize: '15px', fontWeight: 700 }}>{cat}</span>
+                <span style={{ fontSize: '10px', color: 'rgba(255,255,255,0.3)' }}>{books.filter(b => b.category === cat).length.toLocaleString()} books</span>
+                <Link href={`/category/${slug}`} style={{ fontSize: '11px', color: cfg?.color, textDecoration: 'none', marginLeft: 'auto' }}>See all →</Link>
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '8px' }}>
+                {catBooks.map((b, i) => <BookCard key={b.videoId} book={b} index={i} />)}
+              </div>
+              <div style={{ height: '0.5px', background: 'rgba(255,255,255,0.05)', marginTop: '24px' }} />
+            </section>
+          );
+        })}
+      </div>
     </div>
   );
 }

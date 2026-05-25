@@ -2,60 +2,45 @@ import Link from 'next/link';
 
 export default function Footer() {
   return (
-    <footer className="border-t border-white/5 mt-20 py-12 px-4">
-      <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-10">
-
-          {/* Brand */}
-          <div className="md:col-span-2">
-            <div className="flex items-center gap-2 mb-3">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#BF5FFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
-              </svg>
-              <span className="text-lg font-bold">Books<span style={{color:'#BF5FFF'}}>Repay</span></span>
+    <footer style={{ borderTop: '0.5px solid rgba(255,255,255,0.06)', marginTop: '40px', padding: '40px 24px 24px' }}>
+      <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', gap: '40px', marginBottom: '32px' }}>
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '7px', marginBottom: '12px' }}>
+              <i className="ti ti-book" style={{ fontSize: '18px', color: '#BF5FFF' }} />
+              <span style={{ fontSize: '16px', fontWeight: 700 }}>Books<span style={{ color: '#BF5FFF' }}>Repay</span></span>
             </div>
-            <p className="text-sm text-white/40 leading-relaxed max-w-xs">
-              Books always repay you. The world's largest free audiobook library — 43,000+ titles across every genre.
+            <p style={{ fontSize: '12px', color: 'rgba(255,255,255,0.4)', lineHeight: 1.7, maxWidth: '280px' }}>
+              One book can change everything. The world's largest free audiobook library — 43,000+ titles from YouTube.
             </p>
-            <p className="text-xs text-white/20 mt-4">Part of the Repay Media family</p>
+            <p style={{ fontSize: '10px', color: 'rgba(255,255,255,0.2)', marginTop: '12px' }}>Part of the Repay Media family</p>
           </div>
-
-          {/* Categories */}
           <div>
-            <h4 className="text-xs font-semibold tracking-widest uppercase text-white/40 mb-4">Browse</h4>
-            <div className="flex flex-col gap-2">
-              {['Self Development', 'Philosophy', 'Business', 'Fiction', 'Classics', 'Science'].map(cat => (
-                <Link key={cat} href={`/category/${cat.toLowerCase().replace(' ', '-')}`}
-                  className="text-sm text-white/50 hover:text-white transition-colors">
-                  {cat}
-                </Link>
-              ))}
-            </div>
+            <h4 style={{ fontSize: '10px', fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)', marginBottom: '14px' }}>Browse</h4>
+            {['Self Development', 'Philosophy', 'Fiction', 'Classics', 'Spirituality', 'Science'].map(cat => (
+              <Link key={cat} href={`/category/${cat.toLowerCase().replace(/\s+/g, '-')}`}
+                style={{ display: 'block', fontSize: '12px', color: 'rgba(255,255,255,0.5)', textDecoration: 'none', marginBottom: '8px' }}>
+                {cat}
+              </Link>
+            ))}
           </div>
-
-          {/* Empire */}
           <div>
-            <h4 className="text-xs font-semibold tracking-widest uppercase text-white/40 mb-4">Repay Universe</h4>
-            <div className="flex flex-col gap-3">
-              <a href="https://booksrepay.com" className="group">
-                <div className="text-sm font-medium" style={{color:'#BF5FFF'}}>BooksRepay</div>
-                <div className="text-xs text-white/30">You are here</div>
+            <h4 style={{ fontSize: '10px', fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)', marginBottom: '14px' }}>Repay Universe</h4>
+            {[
+              { name: 'BooksRepay', url: '/', sub: 'You are here', color: '#BF5FFF' },
+              { name: 'IdeasRepay', url: 'https://ideasrepay.com', sub: 'Build online income', color: 'rgba(255,255,255,0.7)' },
+              { name: 'AdsRepay', url: 'https://adsrepay.com', sub: 'Earn while you browse', color: 'rgba(255,255,255,0.7)' },
+            ].map(e => (
+              <a key={e.name} href={e.url} style={{ display: 'block', marginBottom: '14px', textDecoration: 'none' }}>
+                <div style={{ fontSize: '12px', fontWeight: 600, color: e.color }}>{e.name}</div>
+                <div style={{ fontSize: '10px', color: 'rgba(255,255,255,0.3)' }}>{e.sub}</div>
               </a>
-              <a href="https://ideasrepay.com" target="_blank" rel="noopener noreferrer" className="group">
-                <div className="text-sm font-medium text-white/70 group-hover:text-white transition-colors">IdeasRepay</div>
-                <div className="text-xs text-white/30">Blueprints to build income</div>
-              </a>
-              <a href="https://adsrepay.com" target="_blank" rel="noopener noreferrer" className="group">
-                <div className="text-sm font-medium text-white/70 group-hover:text-white transition-colors">AdsRepay</div>
-                <div className="text-xs text-white/30">Earn while you browse</div>
-              </a>
-            </div>
+            ))}
           </div>
         </div>
-
-        <div className="border-t border-white/5 pt-6 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-xs text-white/20">© 2026 Repay Media. All rights reserved.</p>
-          <p className="text-xs text-white/20">Books always repay you.</p>
+        <div style={{ borderTop: '0.5px solid rgba(255,255,255,0.05)', paddingTop: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <p style={{ fontSize: '11px', color: 'rgba(255,255,255,0.2)' }}>© 2026 Repay Media. All rights reserved.</p>
+          <p style={{ fontSize: '11px', color: 'rgba(255,255,255,0.2)' }}>One book can change everything.</p>
         </div>
       </div>
     </footer>
