@@ -4,13 +4,13 @@ import Link from 'next/link';
 import BookCard from '@/components/BookCard';
 import { Book, CATEGORY_CONFIG, CATEGORIES } from '@/lib/books';
 
-const MOODS = [
-  { label: 'Motivated', icon: 'ti-flame', color: '#FFB800', cat: 'Self Development' },
-  { label: 'Calm', icon: 'ti-moon', color: '#7F77DD', cat: 'Sleep' },
-  { label: 'Inspired', icon: 'ti-bulb', color: '#00FF9D', cat: 'Philosophy' },
-  { label: 'Build', icon: 'ti-rocket', color: '#00C9FF', cat: 'Business' },
-  { label: 'Escape', icon: 'ti-wand', color: '#FF6B00', cat: 'Fiction' },
-  { label: 'Grow', icon: 'ti-heart', color: '#FF4E6A', cat: 'Psychology' },
+const COLLECTIONS = [
+  { label: 'Under 1 Hour', icon: 'ti-clock-hour-3', color: '#00C9FF', filter: (b: Book) => { const dur = b.duration || ''; const hrs = dur.includes('h') ? parseInt(dur) : 0; const mins = dur.includes('m') ? parseInt(dur.split('h').pop() || dur) : 0; return hrs === 0 && mins < 60 && mins > 0; } },
+  { label: 'Hidden Gems', icon: 'ti-diamond', color: '#BF5FFF', filter: (b: Book) => b.viewCount < 50000 && b.viewCount > 1000 },
+  { label: 'Morning Boost', icon: 'ti-sun', color: '#FFB800', filter: (b: Book) => ['Self Development', 'Philosophy', 'Business'].includes(b.category) },
+  { label: 'Wind Down', icon: 'ti-moon', color: '#7F77DD', filter: (b: Book) => ['Sleep', 'Spirituality'].includes(b.category) },
+  { label: 'Learn Something', icon: 'ti-telescope', color: '#00FF9D', filter: (b: Book) => ['Science', 'History', 'Biography'].includes(b.category) },
+  { label: 'Pure Escape', icon: 'ti-wand', color: '#FF6B00', filter: (b: Book) => ['Fiction', 'Classics'].includes(b.category) },
 ];
 
 const CAT_ROW_ORDER = ['Self Development','Philosophy','Spirituality','Fiction','Classics','History','Science','Biography','Psychology','Health','Sleep'];
@@ -19,6 +19,7 @@ export default function HomePage() {
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState('All');
+  const [activeCollection, setActiveCollection] = useState('');
 
   useEffect(() => {
     fetch('/books_final.json').then(r => r.json()).then((data: Book[]) => {
@@ -27,7 +28,17 @@ export default function HomePage() {
     });
   }, []);
 
-  const filtered = activeCategory === 'All' ? books.slice(0, 10) : books.filter(b => b.category === activeCategory).slice(0, 10);
+  const getFiltered = () => {
+    if (activeCollection) {
+      const col = COLLECTIONS.find(c => c.label === activeCollection);
+      return col ? books.filter(col.filter).slice(0, 10) : books.slice(0, 10);
+    }
+    if (activeCategory !== 'All') return books.filter(b => b.category === activeCategory).slice(0, 10);
+    return books.slice(0, 10);
+  };
+
+  const filtered = getFiltered();
+  const trendingLabel = activeCollection || (activeCategory === 'All' ? 'Trending this week' : activeCategory);
 
   if (loading) return (
     <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: '20px' }}>
@@ -57,12 +68,9 @@ export default function HomePage() {
           <div style={{ maxWidth: '520px', marginBottom: '28px' }}>
             <div style={{ position: 'relative' }}>
               <i className="ti ti-search" style={{ position: 'absolute', left: '18px', top: '50%', transform: 'translateY(-50%)', fontSize: '16px', color: 'rgba(255,255,255,0.3)' }} />
-              <input
-                type="text"
-                placeholder="Search by title, author, or category..."
+              <input type="text" placeholder="Search by title, author, or category..."
                 style={{ width: '100%', background: 'rgba(255,255,255,0.06)', border: '0.5px solid rgba(255,255,255,0.15)', borderRadius: '32px', padding: '16px 24px 16px 48px', fontSize: '15px', color: '#fff', outline: 'none', fontFamily: 'inherit' }}
-                onKeyDown={e => { if (e.key === 'Enter') { const v = (e.target as HTMLInputElement).value; if (v) window.location.href = `/search?q=${encodeURIComponent(v)}`; }}}
-              />
+                onKeyDown={e => { if (e.key === 'Enter') { const v = (e.target as HTMLInputElement).value; if (v) window.location.href = `/search?q=${encodeURIComponent(v)}`; }}} />
             </div>
           </div>
           <div style={{ display: 'flex', gap: '36px' }}>
@@ -81,9 +89,9 @@ export default function HomePage() {
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
           {['All', ...CATEGORIES].map(cat => {
             const cfg = CATEGORY_CONFIG[cat];
-            const active = activeCategory === cat;
+            const active = activeCategory === cat && !activeCollection;
             return (
-              <button key={cat} onClick={() => setActiveCategory(cat)} style={{
+              <button key={cat} onClick={() => { setActiveCategory(cat); setActiveCollection(''); }} style={{
                 padding: '7px 18px', borderRadius: '24px', fontSize: '13px', fontWeight: 600,
                 cursor: 'pointer', border: active ? 'none' : `0.5px solid ${cfg ? cfg.color + '44' : 'rgba(255,255,255,0.2)'}`,
                 background: active ? (cfg ? cfg.color : '#BF5FFF') : 'transparent',
@@ -97,30 +105,29 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 2. MOOD */}
+      {/* 2. CURATED COLLECTIONS */}
       <section style={{ padding: '0 32px 28px', maxWidth: '1164px', margin: '0 auto' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
           <div style={{ flex: 1, height: '0.5px', background: 'rgba(255,255,255,0.08)' }} />
-          <span style={{ fontSize: '11px', fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', whiteSpace: 'nowrap' }}>— or browse by mood</span>
+          <span style={{ fontSize: '11px', fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', whiteSpace: 'nowrap' }}>— or explore a collection</span>
           <div style={{ flex: 1, height: '0.5px', background: 'rgba(255,255,255,0.08)' }} />
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: '10px' }}>
-          {MOODS.map(m => (
-            <Link key={m.label} href={`/category/${m.cat.toLowerCase().replace(/\s+/g, '-')}`} style={{ textDecoration: 'none' }}>
-              <div style={{ borderRadius: '12px', padding: '16px 10px', textAlign: 'center', background: `${m.color}0d`, border: `0.5px solid ${m.color}22`, cursor: 'pointer', transition: 'transform 0.15s' }}>
-                <i className={`ti ${m.icon}`} style={{ fontSize: '22px', color: m.color, display: 'block', marginBottom: '8px' }} />
-                <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.65)', fontWeight: 500 }}>{m.label}</div>
-              </div>
-            </Link>
+          {COLLECTIONS.map(c => (
+            <button key={c.label} onClick={() => { setActiveCollection(c.label === activeCollection ? '' : c.label); setActiveCategory('All'); }}
+              style={{ borderRadius: '12px', padding: '16px 10px', textAlign: 'center', background: activeCollection === c.label ? `${c.color}22` : `${c.color}0d`, border: `0.5px solid ${activeCollection === c.label ? c.color : c.color + '22'}`, cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.15s' }}>
+              <i className={`ti ${c.icon}`} style={{ fontSize: '22px', color: c.color, display: 'block', marginBottom: '8px' }} />
+              <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.65)', fontWeight: 500 }}>{c.label}</div>
+            </button>
           ))}
         </div>
       </section>
 
-      {/* 3. TRENDING — 2 rows */}
+      {/* 3. TRENDING */}
       <section style={{ padding: '0 32px 32px', maxWidth: '1164px', margin: '0 auto' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
           <span style={{ fontSize: '12px', fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)' }}>
-            {activeCategory === 'All' ? 'Trending this week' : activeCategory}
+            {trendingLabel}
           </span>
           <Link href="/library" style={{ fontSize: '13px', color: '#BF5FFF', textDecoration: 'none' }}>View all →</Link>
         </div>
