@@ -5,12 +5,12 @@ import BookCard from '@/components/BookCard';
 import { Book, CATEGORY_CONFIG, CATEGORIES } from '@/lib/books';
 
 const MOODS = [
-  { label: 'Motivated', icon: 'ti-flame', color: '#FFB800', cat: 'self-development' },
-  { label: 'Calm', icon: 'ti-moon', color: '#7F77DD', cat: 'sleep' },
-  { label: 'Inspired', icon: 'ti-bulb', color: '#00FF9D', cat: 'philosophy' },
-  { label: 'Build', icon: 'ti-rocket', color: '#00C9FF', cat: 'business' },
-  { label: 'Escape', icon: 'ti-wand', color: '#FF6B00', cat: 'fiction' },
-  { label: 'Grow', icon: 'ti-heart', color: '#FF4E6A', cat: 'psychology' },
+  { label: 'Motivated', icon: 'ti-flame', color: '#FFB800', cat: 'Self Development' },
+  { label: 'Calm', icon: 'ti-moon', color: '#7F77DD', cat: 'Sleep' },
+  { label: 'Inspired', icon: 'ti-bulb', color: '#00FF9D', cat: 'Philosophy' },
+  { label: 'Build', icon: 'ti-rocket', color: '#00C9FF', cat: 'Business' },
+  { label: 'Escape', icon: 'ti-wand', color: '#FF6B00', cat: 'Fiction' },
+  { label: 'Grow', icon: 'ti-heart', color: '#FF4E6A', cat: 'Psychology' },
 ];
 
 const CAT_ROW_ORDER = ['Self Development','Philosophy','Spirituality','Fiction','Classics','History','Science','Biography','Psychology','Health','Sleep'];
@@ -106,7 +106,7 @@ export default function HomePage() {
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: '10px' }}>
           {MOODS.map(m => (
-            <Link key={m.label} href={`/category/${m.cat}`} style={{ textDecoration: 'none' }}>
+            <Link key={m.label} href={`/category/${m.cat.toLowerCase().replace(/\s+/g, '-')}`} style={{ textDecoration: 'none' }}>
               <div style={{ borderRadius: '12px', padding: '16px 10px', textAlign: 'center', background: `${m.color}0d`, border: `0.5px solid ${m.color}22`, cursor: 'pointer', transition: 'transform 0.15s' }}>
                 <i className={`ti ${m.icon}`} style={{ fontSize: '22px', color: m.color, display: 'block', marginBottom: '8px' }} />
                 <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.65)', fontWeight: 500 }}>{m.label}</div>

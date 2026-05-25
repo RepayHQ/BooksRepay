@@ -2,7 +2,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import BookCard from '@/components/BookCard';
 import { Book, CATEGORY_CONFIG, CATEGORIES } from '@/lib/books';
-import { Search, SlidersHorizontal } from 'lucide-react';
+import Link from 'next/link';
 
 const SORT_OPTIONS = [
   { label: 'Most Viewed', value: 'views' },
@@ -37,82 +37,83 @@ export default function LibraryPage() {
   const filtered = useMemo(() => {
     let result = [...books];
     if (query) result = result.filter(b =>
-      b.bookTitle.toLowerCase().includes(query.toLowerCase()) ||
-      b.author.toLowerCase().includes(query.toLowerCase())
+      b.bookTitle?.toLowerCase().includes(query.toLowerCase()) ||
+      b.author?.toLowerCase().includes(query.toLowerCase())
     );
     if (category !== 'All') result = result.filter(b => b.category === category);
-    if (duration === 'short') result = result.filter(b => b.duration && parseInt(b.duration) < 60);
-    if (duration === 'medium') result = result.filter(b => b.duration && parseInt(b.duration) >= 60 && parseInt(b.duration) < 180);
-    if (duration === 'long') result = result.filter(b => b.duration && parseInt(b.duration) >= 180);
     if (sort === 'views') result.sort((a, b) => b.viewCount - a.viewCount);
     if (sort === 'newest') result.sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
-    if (sort === 'az') result.sort((a, b) => a.bookTitle.localeCompare(b.bookTitle));
+    if (sort === 'az') result.sort((a, b) => a.bookTitle?.localeCompare(b.bookTitle || '') || 0);
     return result;
   }, [books, query, category, sort, duration]);
 
   const paginated = filtered.slice(0, page * PER_PAGE);
 
+  const selectStyle = {
+    background: 'rgba(255,255,255,0.06)', border: '0.5px solid rgba(255,255,255,0.12)',
+    borderRadius: '10px', padding: '10px 14px', fontSize: '13px', color: '#fff',
+    outline: 'none', fontFamily: 'inherit', cursor: 'pointer'
+  };
+
   return (
-    <div className="min-h-screen px-4 py-8">
-      <div className="max-w-7xl mx-auto">
+    <div style={{ minHeight: '100vh', padding: '28px 32px', maxWidth: '1164px', margin: '0 auto' }}>
 
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2" style={{ fontFamily: "'Playfair Display', serif" }}>
-            The Library
-          </h1>
-          <p className="text-white/40 text-sm">{books.length.toLocaleString()} audiobooks and counting</p>
-        </div>
+      <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', fontSize: '14px', color: 'rgba(255,255,255,0.4)', textDecoration: 'none', marginBottom: '24px' }}>
+        <i className="ti ti-arrow-left" style={{ fontSize: '16px' }} /> Back to home
+      </Link>
 
-        {/* Filters */}
-        <div className="flex flex-wrap gap-3 mb-8">
-          <div className="relative flex-1 min-w-[200px]">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-white/30" size={15} />
-            <input type="text" placeholder="Search titles, authors..."
-              className="w-full bg-white/5 border border-white/10 rounded-xl py-2.5 pl-9 pr-4 text-sm text-white placeholder-white/30 focus:outline-none focus:border-purple-500/50"
-              value={query} onChange={e => { setQuery(e.target.value); setPage(1); }} />
-          </div>
-          <select value={category} onChange={e => { setCategory(e.target.value); setPage(1); }}
-            className="bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none">
-            <option value="All">All Categories</option>
-            {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
-          </select>
-          <select value={sort} onChange={e => setSort(e.target.value)}
-            className="bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none">
-            {SORT_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
-          </select>
-          <select value={duration} onChange={e => setDuration(e.target.value)}
-            className="bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none">
-            {DURATION_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
-          </select>
-        </div>
-
-        {/* Results count */}
-        <div className="text-xs text-white/30 mb-4">
-          Showing {Math.min(paginated.length, filtered.length).toLocaleString()} of {filtered.length.toLocaleString()} results
-        </div>
-
-        {/* Grid */}
-        {loading ? (
-          <div className="flex items-center justify-center h-64">
-            <div className="w-10 h-10 rounded-full border-2 border-purple-500 border-t-transparent animate-spin" />
-          </div>
-        ) : (
-          <>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 mb-8">
-              {paginated.map((book, i) => <BookCard key={book.videoId} book={book} index={i} />)}
-            </div>
-            {paginated.length < filtered.length && (
-              <div className="text-center">
-                <button onClick={() => setPage(p => p + 1)}
-                  className="px-8 py-3 rounded-full text-sm font-semibold text-black transition-transform hover:scale-105"
-                  style={{ background: '#BF5FFF' }}>
-                  Load more
-                </button>
-              </div>
-            )}
-          </>
-        )}
+      <div style={{ marginBottom: '24px' }}>
+        <h1 style={{ fontSize: '36px', fontWeight: 700, marginBottom: '6px', fontFamily: "'Playfair Display', serif" }}>
+          The Library
+        </h1>
+        <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '15px' }}>{books.length.toLocaleString()} audiobooks and counting</p>
       </div>
+
+      {/* Filters */}
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginBottom: '20px' }}>
+        <div style={{ position: 'relative', flex: 1, minWidth: '200px' }}>
+          <i className="ti ti-search" style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', fontSize: '14px', color: 'rgba(255,255,255,0.3)' }} />
+          <input type="text" placeholder="Search titles, authors..."
+            style={{ ...selectStyle, width: '100%', paddingLeft: '40px' }}
+            value={query} onChange={e => { setQuery(e.target.value); setPage(1); }} />
+        </div>
+        <select value={category} onChange={e => { setCategory(e.target.value); setPage(1); }} style={selectStyle}>
+          <option value="All">All Categories</option>
+          {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
+        </select>
+        <select value={sort} onChange={e => setSort(e.target.value)} style={selectStyle}>
+          {SORT_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+        </select>
+        <select value={duration} onChange={e => setDuration(e.target.value)} style={selectStyle}>
+          {DURATION_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+        </select>
+      </div>
+
+      <div style={{ fontSize: '13px', color: 'rgba(255,255,255,0.3)', marginBottom: '16px' }}>
+        Showing {Math.min(paginated.length, filtered.length).toLocaleString()} of {filtered.length.toLocaleString()} results
+      </div>
+
+      {loading ? (
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '200px' }}>
+          <div style={{ width: '40px', height: '40px', borderRadius: '50%', border: '2px solid #BF5FFF', borderTopColor: 'transparent', animation: 'spin 1s linear infinite' }} />
+        </div>
+      ) : (
+        <>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '12px', marginBottom: '24px' }}>
+            {paginated.map((book, i) => <BookCard key={book.videoId} book={book} index={i} />)}
+          </div>
+          {paginated.length < filtered.length && (
+            <div style={{ textAlign: 'center' }}>
+              <button onClick={() => setPage(p => p + 1)} style={{
+                padding: '12px 32px', borderRadius: '28px', fontSize: '14px', fontWeight: 600,
+                color: '#000', background: '#BF5FFF', border: 'none', cursor: 'pointer', fontFamily: 'inherit'
+              }}>
+                Load more
+              </button>
+            </div>
+          )}
+        </>
+      )}
     </div>
   );
 }
