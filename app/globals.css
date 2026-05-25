@@ -29,15 +29,8 @@ body {
 }
 
 .dot-grid {
-  background-image: radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px);
+  background-image: radial-gradient(circle, rgba(255,255,255,0.03) 1px, transparent 1px);
   background-size: 28px 28px;
-}
-
-.line-clamp-2 {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
 }
 
 @keyframes fadeUp {
@@ -45,12 +38,79 @@ body {
   to { opacity: 1; transform: translateY(0); }
 }
 .animate-in { animation: fadeUp 0.5s ease forwards; }
-.delay-1 { animation-delay: 0.1s; opacity: 0; }
-.delay-2 { animation-delay: 0.2s; opacity: 0; }
-.delay-3 { animation-delay: 0.3s; opacity: 0; }
-.delay-4 { animation-delay: 0.4s; opacity: 0; }
 
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
 .animate-spin { animation: spin 1s linear infinite; }
+
+/* ── RESPONSIVE GRIDS ──────────────────────────────────────────────── */
+.grid-5 {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+}
+
+.grid-6 {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.grid-2-detail {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 40px;
+}
+
+.page-pad {
+  padding-left: 32px;
+  padding-right: 32px;
+  max-width: 1164px;
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .grid-5 {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+  .grid-6 {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+  }
+  .grid-3 {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .grid-2-detail {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .page-pad {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  .hero-title {
+    font-size: clamp(32px, 8vw, 56px) !important;
+    letter-spacing: -1px !important;
+  }
+  .book-detail-title {
+    font-size: 22px !important;
+  }
+  .book-detail-author {
+    font-size: 16px !important;
+  }
+  .hide-mobile {
+    display: none !important;
+  }
+  .empire-nav {
+    display: none !important;
+  }
+}
