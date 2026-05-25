@@ -1,0 +1,83 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;700;900&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --brand-purple: #BF5FFF;
+  --brand-purple-dark: #7F35CC;
+  --brand-black: #07070f;
+  --brand-card: #111122;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: #07070f;
+  color: #ffffff;
+  font-family: 'DM Sans', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #07070f; }
+::-webkit-scrollbar-thumb { background: #BF5FFF33; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #BF5FFF66; }
+
+/* Selection */
+::selection { background: #BF5FFF33; color: #BF5FFF; }
+
+/* Neon glow utility */
+.neon-purple { color: #BF5FFF; text-shadow: 0 0 20px #BF5FFF44; }
+.neon-border { border-color: #BF5FFF; box-shadow: 0 0 15px #BF5FFF22; }
+
+/* Card hover */
+.book-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+.book-card:hover { transform: translateY(-4px); }
+
+/* Top line glow */
+.top-line::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  border-radius: 2px 2px 0 0;
+}
+
+/* Dot grid background */
+.dot-grid {
+  background-image: radial-gradient(circle, #ffffff08 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Glass effect */
+.glass {
+  background: rgba(17, 17, 34, 0.8);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+/* Category pill */
+.cat-pill {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 20px;
+  display: inline-block;
+}
+
+/* Animate in */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-in { animation: fadeUp 0.5s ease forwards; }
+.delay-1 { animation-delay: 0.1s; opacity: 0; }
+.delay-2 { animation-delay: 0.2s; opacity: 0; }
+.delay-3 { animation-delay: 0.3s; opacity: 0; }
+.delay-4 { animation-delay: 0.4s; opacity: 0; }
