@@ -19,7 +19,7 @@ export default function BookCard({ book, index = 0 }: Props) {
         borderRadius: '14px',
         overflow: 'hidden',
         position: 'relative',
-        height: '220px',
+        height: '180px',
         cursor: 'pointer',
         transition: 'transform 0.2s ease',
         border: `0.5px solid ${cat.color}22`,
@@ -60,7 +60,7 @@ export default function BookCard({ book, index = 0 }: Props) {
 
           {/* Bottom: title, author, bar, score */}
           <div>
-            <div style={{ fontSize: '17px', fontWeight: 700, color: '#ffffff', lineHeight: 1.25, marginBottom: '5px' }}>
+            <div style={{ fontSize: '14px', fontWeight: 700, color: '#ffffff', lineHeight: 1.25, marginBottom: '5px' }}>
               {title}
             </div>
             {book.author && (
