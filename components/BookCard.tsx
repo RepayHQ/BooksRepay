@@ -60,7 +60,7 @@ export default function BookCard({ book, index = 0 }: Props) {
 
           {/* Bottom: title, author, bar, score */}
           <div>
-            <div style={{ fontSize: '14px', fontWeight: 700, color: '#ffffff', lineHeight: 1.25, marginBottom: '5px' }}>
+            <div style={{ fontSize: '17px', fontWeight: 700, color: '#ffffff', lineHeight: 1.25, marginBottom: '5px' }}>
               {title}
             </div>
             {book.author && (
