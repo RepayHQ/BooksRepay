@@ -28,8 +28,8 @@ export default function Navbar() {
           onMouseLeave={() => setIdeasHover(false)}
           style={{
             padding: '4px 10px', borderRadius: '8px', textDecoration: 'none',
-            border: ideasHover ? '0.5px solid #FFB800' : '0.5px solid rgba(255,255,255,0.08)',
-            background: ideasHover ? 'rgba(255,184,0,0.08)' : 'transparent',
+            border: ideasHover ? '0.5px solid #FFD055' : '0.5px solid rgba(255,184,0,0.5)',
+            background: ideasHover ? 'rgba(255,184,0,0.14)' : 'rgba(255,184,0,0.07)',
             transition: 'border 0.18s ease, background 0.18s ease',
           }}>
           <div style={{ fontSize: '12px', fontWeight: 700, color: '#FFB800' }}>IdeasRepay</div>
@@ -40,8 +40,8 @@ export default function Navbar() {
           onMouseLeave={() => setAdsHover(false)}
           style={{
             padding: '4px 10px', borderRadius: '8px', textDecoration: 'none',
-            border: adsHover ? '0.5px solid #00FF9D' : '0.5px solid rgba(255,255,255,0.08)',
-            background: adsHover ? 'rgba(0,255,157,0.08)' : 'transparent',
+            border: adsHover ? '0.5px solid #4DFFBE' : '0.5px solid rgba(0,255,157,0.5)',
+            background: adsHover ? 'rgba(0,255,157,0.14)' : 'rgba(0,255,157,0.07)',
             transition: 'border 0.18s ease, background 0.18s ease',
           }}>
           <div style={{ fontSize: '12px', fontWeight: 700, color: '#00FF9D' }}>AdsRepay</div>
