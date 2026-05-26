@@ -90,12 +90,15 @@ export default function HomePage() {
             const cfg = CATEGORY_CONFIG[cat];
             const active = activeCategory === cat && !activeCollection;
             return (
-              <button key={cat} onClick={() => { setActiveCategory(cat); setActiveCollection(''); }} style={{
+              <button key={cat} onClick={() => { setActiveCategory(cat); setActiveCollection(''); }}
+                onMouseEnter={e => { if (!active) e.currentTarget.style.border = `0.5px solid ${cfg ? cfg.color : 'rgba(255,255,255,0.6)'}`; }}
+                onMouseLeave={e => { if (!active) e.currentTarget.style.border = `0.5px solid ${cfg ? cfg.color + '44' : 'rgba(255,255,255,0.2)'}`; }}
+                style={{
                 padding: '5px 12px', borderRadius: '20px', fontSize: '12px', fontWeight: 600,
                 cursor: 'pointer', border: active ? 'none' : `0.5px solid ${cfg ? cfg.color + '44' : 'rgba(255,255,255,0.2)'}`,
                 background: active ? (cfg ? cfg.color : '#BF5FFF') : 'transparent',
                 color: active ? '#000' : (cfg ? cfg.color : 'rgba(255,255,255,0.6)'),
-                fontFamily: 'inherit', transition: 'all 0.15s'
+                fontFamily: 'inherit', transition: 'all 0.2s ease'
               }}>
                 {cat}
               </button>
@@ -114,7 +117,9 @@ export default function HomePage() {
         <div className="grid-6">
           {COLLECTIONS.map(c => (
             <button key={c.label} onClick={() => { setActiveCollection(c.label === activeCollection ? '' : c.label); setActiveCategory('All'); }}
-              style={{ borderRadius: '12px', padding: '12px 8px', textAlign: 'center', background: activeCollection === c.label ? `${c.color}22` : `${c.color}0d`, border: `0.5px solid ${activeCollection === c.label ? c.color : c.color + '22'}`, cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.15s' }}>
+              onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.border = `0.5px solid ${c.color}`; e.currentTarget.style.background = `${c.color}22`; }}
+              onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.border = `0.5px solid ${activeCollection === c.label ? c.color : c.color + '22'}`; e.currentTarget.style.background = activeCollection === c.label ? `${c.color}22` : `${c.color}0d`; }}
+              style={{ borderRadius: '12px', padding: '12px 8px', textAlign: 'center', background: activeCollection === c.label ? `${c.color}22` : `${c.color}0d`, border: `0.5px solid ${activeCollection === c.label ? c.color : c.color + '22'}`, cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.2s ease' }}>
               <i className={`ti ${c.icon}`} style={{ fontSize: '20px', color: c.color, display: 'block', marginBottom: '6px' }} />
               <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.65)', fontWeight: 500, lineHeight: 1.3 }}>{c.label}</div>
             </button>
@@ -153,7 +158,9 @@ export default function HomePage() {
             { name: 'AdsRepay', url: 'https://adsrepay.com', color: '#00FF9D', icon: 'ti-trending-up', desc: 'Earn while you learn online.', sub: 'adsrepay.com ↗' },
           ].map(e => (
             <a key={e.name} href={e.url} target={e.url === '#' ? undefined : '_blank'} rel="noopener noreferrer"
-              style={{ borderRadius: '14px', padding: '18px', border: `0.5px solid ${e.url === '#' ? e.color + '33' : 'rgba(255,255,255,0.08)'}`, background: '#0d0d1a', textDecoration: 'none', display: 'block' }}>
+              onMouseEnter={el => { el.currentTarget.style.transform = 'translateY(-4px)'; el.currentTarget.style.border = `0.5px solid ${e.color}`; el.currentTarget.style.background = `${e.color}0d`; }}
+              onMouseLeave={el => { el.currentTarget.style.transform = 'translateY(0)'; el.currentTarget.style.border = `0.5px solid ${e.url === '#' ? e.color + '33' : 'rgba(255,255,255,0.08)'}` ; el.currentTarget.style.background = '#0d0d1a'; }}
+              style={{ borderRadius: '14px', padding: '18px', border: `0.5px solid ${e.url === '#' ? e.color + '33' : 'rgba(255,255,255,0.08)'}`, background: '#0d0d1a', textDecoration: 'none', display: 'block', transition: 'all 0.2s ease' }}>
               <div style={{ width: '34px', height: '34px', borderRadius: '10px', background: `${e.color}18`, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '12px' }}>
                 <i className={`ti ${e.icon}`} style={{ fontSize: '16px', color: e.color }} />
               </div>

@@ -21,11 +21,11 @@ export default function BookCard({ book, index = 0 }: Props) {
         position: 'relative',
         height: '220px',
         cursor: 'pointer',
-        transition: 'transform 0.2s ease',
+        transition: 'all 0.2s ease',
         border: `0.5px solid ${cat.color}22`,
       }}
-        onMouseEnter={e => (e.currentTarget.style.transform = 'translateY(-5px)')}
-        onMouseLeave={e => (e.currentTarget.style.transform = 'translateY(0)')}
+        onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.border = `0.5px solid ${cat.color}`; }}
+        onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.border = `0.5px solid ${cat.color}22`; }}
       >
         <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '2px', background: `linear-gradient(90deg, ${cat.color}, transparent)`, borderRadius: '14px 14px 0 0' }} />
         <div style={{ position: 'absolute', width: '90px', height: '90px', borderRadius: '50%', background: cat.color, top: '-20px', right: '-20px', opacity: 0.25, filter: 'blur(28px)' }} />
