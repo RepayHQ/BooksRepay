@@ -38,9 +38,23 @@ export default function Footer() {
             ))}
           </div>
         </div>
-        <div style={{ borderTop: '0.5px solid rgba(255,255,255,0.05)', paddingTop: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <p style={{ fontSize: '11px', color: 'rgba(255,255,255,0.2)' }}>© 2026 Repay Media. All rights reserved.</p>
-          <p style={{ fontSize: '11px', color: 'rgba(255,255,255,0.2)' }}>One book can change everything.</p>
+        <div style={{ borderTop: '0.5px solid rgba(255,255,255,0.05)', paddingTop: '20px' }}>
+          <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap', marginBottom: '16px' }}>
+            {[
+              { label: 'About', href: '/about' },
+              { label: 'Privacy Policy', href: '/privacy' },
+              { label: 'Terms', href: '/terms' },
+              { label: 'Contact', href: '/contact' },
+            ].map(link => (
+              <Link key={link.href} href={link.href} style={{ fontSize: '11px', color: 'rgba(255,255,255,0.35)', textDecoration: 'none' }}>
+                {link.label}
+              </Link>
+            ))}
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <p style={{ fontSize: '11px', color: 'rgba(255,255,255,0.2)' }}>© 2026 Repay Media. All rights reserved.</p>
+            <p style={{ fontSize: '11px', color: 'rgba(255,255,255,0.2)' }}>One book can change everything.</p>
+          </div>
         </div>
       </div>
     </footer>
