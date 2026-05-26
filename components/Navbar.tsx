@@ -1,7 +1,11 @@
 'use client';
 import Link from 'next/link';
+import { useState } from 'react';
 
 export default function Navbar() {
+  const [ideasHover, setIdeasHover] = useState(false);
+  const [adsHover, setAdsHover] = useState(false);
+
   return (
     <nav style={{
       position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100,
@@ -20,12 +24,26 @@ export default function Navbar() {
       {/* Empire links - hidden on small mobile */}
       <div className="empire-nav" style={{ display: 'flex', gap: '6px', marginLeft: 'auto', flexShrink: 0 }}>
         <a href="https://ideasrepay.com" target="_blank" rel="noopener noreferrer"
-          style={{ padding: '4px 10px', borderRadius: '8px', border: '0.5px solid rgba(255,255,255,0.08)', textDecoration: 'none' }}>
+          onMouseEnter={() => setIdeasHover(true)}
+          onMouseLeave={() => setIdeasHover(false)}
+          style={{
+            padding: '4px 10px', borderRadius: '8px', textDecoration: 'none',
+            border: ideasHover ? '0.5px solid #FFB800' : '0.5px solid rgba(255,255,255,0.08)',
+            background: ideasHover ? 'rgba(255,184,0,0.08)' : 'transparent',
+            transition: 'border 0.18s ease, background 0.18s ease',
+          }}>
           <div style={{ fontSize: '12px', fontWeight: 700, color: '#FFB800' }}>IdeasRepay</div>
           <div style={{ fontSize: '8px', color: 'rgba(255,255,255,0.7)' }}>Build online income</div>
         </a>
         <a href="https://adsrepay.com" target="_blank" rel="noopener noreferrer"
-          style={{ padding: '4px 10px', borderRadius: '8px', border: '0.5px solid rgba(255,255,255,0.08)', textDecoration: 'none' }}>
+          onMouseEnter={() => setAdsHover(true)}
+          onMouseLeave={() => setAdsHover(false)}
+          style={{
+            padding: '4px 10px', borderRadius: '8px', textDecoration: 'none',
+            border: adsHover ? '0.5px solid #00FF9D' : '0.5px solid rgba(255,255,255,0.08)',
+            background: adsHover ? 'rgba(0,255,157,0.08)' : 'transparent',
+            transition: 'border 0.18s ease, background 0.18s ease',
+          }}>
           <div style={{ fontSize: '12px', fontWeight: 700, color: '#00FF9D' }}>AdsRepay</div>
           <div style={{ fontSize: '8px', color: 'rgba(255,255,255,0.7)' }}>Earn with microtasks</div>
         </a>
