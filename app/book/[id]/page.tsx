@@ -1,28 +1,47 @@
 'use client';
 import { useState, useEffect, use } from 'react';
-import { CATEGORY_CONFIG } from '@/lib/books';
+import { CATEGORY_CONFIG, getVideoIdFromSlug, getBookSlug } from '@/lib/books';
 import Link from 'next/link';
 
 export default function BookPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
+  const videoId = getVideoIdFromSlug(id);
   const [book, setBook] = useState<any>(null);
   const [related, setRelated] = useState<any[]>([]);
   const [playing, setPlaying] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!id) return;
+    if (!videoId) return;
     fetch('/books_final.json')
       .then(r => r.json())
       .then((books: any[]) => {
-        const found = books.find((b: any) => b.videoId === id);
+        const found = books.find((b: any) => b.videoId === videoId);
         if (found) {
           setBook(found);
           setRelated(books.filter((b: any) => b.category === found.category && b.videoId !== found.videoId).slice(0, 6));
         }
         setLoading(false);
       }).catch(() => setLoading(false));
-  }, [id]);
+  }, [videoId]);
+
+  useEffect(() => {
+    if (!book) return;
+    const canonicalUrl = `https://booksrepay.com/book/${getBookSlug(book)}`;
+    let link = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
+    if (link) {
+      link.href = canonicalUrl;
+    } else {
+      link = document.createElement('link');
+      link.rel = 'canonical';
+      link.href = canonicalUrl;
+      document.head.appendChild(link);
+    }
+    return () => {
+      const el = document.querySelector('link[rel="canonical"]');
+      if (el) el.remove();
+    };
+  }, [book]);
 
   if (loading) return (
     <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: '20px' }}>
@@ -54,7 +73,7 @@ export default function BookPage({ params }: { params: Promise<{ id: string }> }
           {/* Video */}
           <div style={{ borderRadius: '14px', overflow: 'hidden', background: '#0d0d1a', marginBottom: '20px', aspectRatio: '16/9', position: 'relative' }}>
             {playing ? (
-              <iframe src={`https://www.youtube.com/embed/${id}?autoplay=1`}
+              <iframe src={`https://www.youtube.com/embed/${videoId}?autoplay=1`}
                 style={{ width: '100%', height: '100%', border: 'none' }}
                 allow="autoplay; encrypted-media" allowFullScreen />
             ) : (
@@ -108,7 +127,7 @@ export default function BookPage({ params }: { params: Promise<{ id: string }> }
             {related.map(b => {
               const c = CATEGORY_CONFIG[b.category] || CATEGORY_CONFIG['Uncategorized'];
               return (
-                <Link key={b.videoId} href={`/book/${b.videoId}`} style={{ textDecoration: 'none' }}>
+                <Link key={b.videoId} href={`/book/${getBookSlug(b)}`} style={{ textDecoration: 'none' }}>
                   <div style={{ display: 'flex', gap: '12px', padding: '12px', borderRadius: '10px', background: '#0d0d1a', border: '0.5px solid rgba(255,255,255,0.06)', cursor: 'pointer' }}>
                     <div style={{ width: '42px', height: '42px', borderRadius: '8px', background: c.bgColor, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, border: `0.5px solid ${c.color}33` }}>
                       <i className={`ti ${c.icon}`} style={{ fontSize: '18px', color: c.color }} />

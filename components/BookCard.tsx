@@ -1,6 +1,6 @@
 'use client';
 import Link from 'next/link';
-import { Book, CATEGORY_CONFIG } from '@/lib/books';
+import { Book, CATEGORY_CONFIG, getBookSlug } from '@/lib/books';
 
 interface Props { book: Book; index?: number; }
 
@@ -13,7 +13,7 @@ export default function BookCard({ book, index = 0 }: Props) {
   const catLine2 = book.category.split(' ').slice(1).join(' ') || '';
 
   return (
-    <Link href={`/book/${book.videoId}`} style={{ textDecoration: 'none', display: 'block' }}>
+    <Link href={`/book/${getBookSlug(book)}`} style={{ textDecoration: 'none', display: 'block' }}>
       <div style={{
         background: cat.bgColor,
         borderRadius: '14px',

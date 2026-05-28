@@ -64,3 +64,23 @@ export function repayScore(views: number, likes: number): number {
   if (likes > 0 && views > 0 && likes / views > 0.05) score = Math.min(10, score + 0.5);
   return Math.round(score * 10) / 10;
 }
+
+export function getBookSlug(book: Book): string {
+  const lowerTitle = book.bookTitle.toLowerCase();
+  const lowerAuthor = book.author ? book.author.toLowerCase() : '';
+  const combined = (lowerAuthor && !lowerTitle.includes(lowerAuthor))
+    ? lowerTitle + ' ' + lowerAuthor
+    : lowerTitle;
+  let textSlug = combined
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+  if (textSlug.length > 80) {
+    textSlug = textSlug.slice(0, 80).replace(/-+$/, '');
+  }
+  return `${textSlug}-${book.videoId}`;
+}
+
+export function getVideoIdFromSlug(slug: string): string {
+  if (slug.length === 11) return slug;
+  return slug.slice(-11);
+}
