@@ -78,8 +78,9 @@ export default function BookPage({ params }: { params: Promise<{ id: string }> }
                 allow="autoplay; encrypted-media" allowFullScreen />
             ) : (
               <div style={{ position: 'relative', width: '100%', height: '100%', background: cat.bgColor }}>
+                {book.thumbnail && <img src={book.thumbnail} alt={book.bookTitle} style={{ width: '100%', height: '100%', objectFit: 'cover', position: 'absolute', inset: 0 }} />}
+                <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.55)' }} />
                 <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '3px', background: `linear-gradient(90deg, ${cat.color}, transparent)` }} />
-                {book.thumbnail && <img src={book.thumbnail} alt={book.bookTitle} style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.35, position: 'absolute', inset: 0 }} />}
                 <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <button onClick={() => setPlaying(true)} style={{ width: '64px', height: '64px', borderRadius: '50%', background: cat.color, border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <i className="ti ti-player-play" style={{ fontSize: '26px', color: '#000' }} />
