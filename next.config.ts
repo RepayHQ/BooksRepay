@@ -1,7 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  outputFileTracingIncludes: {
+    "/sitemap/*": ["./public/books_final.json"],
+  },
 };
 
 export default nextConfig;
