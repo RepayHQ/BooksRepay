@@ -1,6 +1,4 @@
 import { MetadataRoute } from 'next';
-import fs from 'fs';
-import path from 'path';
 import { getBookSlug } from '@/lib/books';
 
 const baseUrl = 'https://booksrepay.com';
@@ -10,10 +8,10 @@ let _sortedBooks: any[] | null = null;
 
 function getSortedBooks(): any[] {
   if (!_sortedBooks) {
-    const raw: any[] = JSON.parse(
-      fs.readFileSync(path.join(process.cwd(), 'public', 'books_final.json'), 'utf-8')
-    );
-    _sortedBooks = raw.slice().sort((a, b) => b.viewCount - a.viewCount);
+    // require resolves relative to this file, not process.cwd() — safe in all Vercel build contexts
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const raw: any[] = require('../public/books_final.json');
+    _sortedBooks = raw.slice().sort((a: any, b: any) => b.viewCount - a.viewCount);
   }
   return _sortedBooks;
 }
@@ -26,7 +24,8 @@ export async function generateSitemaps() {
 
 export default function sitemap({ id }: { id: number }): MetadataRoute.Sitemap {
   const books = getSortedBooks();
-  const bookChunk = books.slice(id * CHUNK_SIZE, (id + 1) * CHUNK_SIZE);
+  const n = Number(id);
+  const bookChunk = books.slice(n * CHUNK_SIZE, (n + 1) * CHUNK_SIZE);
 
   const bookPages: MetadataRoute.Sitemap = bookChunk.map((book: any) => ({
     url: `${baseUrl}/book/${getBookSlug(book)}`,
@@ -35,7 +34,7 @@ export default function sitemap({ id }: { id: number }): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
-  if (id === 0) {
+  if (n === 0) {
     const categories = [
       'self-development', 'philosophy', 'business', 'fiction', 'psychology',
       'spirituality', 'finance', 'science', 'history', 'biography',
